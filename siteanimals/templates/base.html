@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    {% block add_css %} {% endblock %}
+</head>
+<body>
+{% block basic %}
+<h1>{{header|lower}}</h1>
+<ul>
+        {% for items in data_inf %}
+        <li>
+                <p><a href="{{items.name}}/">{{items.kinds}}</a></p>
+
+        </li>
+        {% endfor %}
+</ul>
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+</body>
+</html>

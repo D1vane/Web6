@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <link type="text/css" href="{% static 'home/css/styles.css' %}" rel="stylesheet"/>
+</head>
+<body>
+{% load home_tags %}
+<h1>{{header}}</h1>
+<ul>
+        {% show_classes %}
+</ul>
+</body>
+</html>
