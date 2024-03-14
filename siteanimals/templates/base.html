@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
@@ -11,8 +12,8 @@
 <ul>
         {% for items in data_inf %}
         <li>
-                <p><a href="{{items.name}}/">{{items.kinds}}</a></p>
-
+               <p><a href="{{items.page_name}}/">{{items.animal}}</a></p>
+               <p> {{items.content|truncatewords:50}} </p>
         </li>
         {% endfor %}
 </ul>
