@@ -1,0 +1,17 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+<h1>{{header}}</h1>
+<ul>
+        {% for items in content %}
+        <li>
+               <p><a href="{{items.page_name}}/">{{items.animal}}</a></p>
+               <p>{{items.content|truncatewords:50}}</p>
+        </li>
+        {% endfor %}
+</ul>
+</body>
+</html>

@@ -12,8 +12,7 @@
 <ul>
         {% for items in data_inf %}
         <li>
-               <p><a href="{{items.page_name}}/">{{items.animal}}</a></p>
-               <p> {{items.content|truncatewords:50}} </p>
+               <p><a href="{{items.slug}}/">{{items.name}}</a></p>
         </li>
         {% endfor %}
 </ul>
