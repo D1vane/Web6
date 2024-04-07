@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import reverse
 # Create your models here.
 class RedBookAnimal(models.Manager):
     def get_queryset(self):
@@ -34,7 +35,8 @@ class UndergroundTags(models.Model):
 
     def __str__(self):
         return self.tag
-
+    def get_absolute_url(self):
+        return reverse('tag', kwargs={'underground_tag_slug':self.slug})
 
 class Underground_Facts(models.Model):
     content = models.TextField(blank=True)

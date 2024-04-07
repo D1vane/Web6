@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.shortcuts import reverse
 
 # Create your models here.
 class RedBookAnimal(models.Manager):
@@ -41,7 +41,8 @@ class EarthTags(models.Model):
 
     def __str__(self):
         return self.tag
-
+    def get_absolute_url(self):
+        return reverse('tag', kwargs={'earth_tag_slug':self.slug})
 
 class Earth_Facts(models.Model):
     content = models.TextField(blank=True)

@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import reverse
 # Create your models here.
 class RedBookAnimal(models.Manager):
     def get_queryset(self):
@@ -32,6 +33,8 @@ class WaterTags(models.Model):
     slug = models.SlugField(max_length=255,unique=True,db_index=True)
     def __str__(self):
         return self.tag
+    def get_absolute_url(self):
+        return reverse('tag', kwargs={'water_tag_slug':self.slug})
 class Water_Facts(models.Model):
     content = models.TextField(blank=True)
 

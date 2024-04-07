@@ -1,8 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block add_css %}
-<link type="text/css" rel="stylesheet" href=" {% static 'water/css/styles.css' %}"/>
-{% endblock %}
-{% block content %}
-<h2>Моря и океаны</h2>
+{% block load_tags %}
+{% load water_tags %}
+{% show_water_tags %}
 {% endblock %}

@@ -1,8 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block add_css %}
-<link type="text/css" rel="stylesheet" href=" {% static 'air/css/styles.css' %}"/>
-{% endblock %}
-{% block content %}
-<h2>На всем земном шаре</h2>
+{% block load_tags %}
+{% load air_tags %}
+{% show_air_tags %}
 {% endblock %}
