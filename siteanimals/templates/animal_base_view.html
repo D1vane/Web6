@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+<h1>{{header}}</h1>
+<p>{{content}}</p>
+<h5>Интересный факт: {{fact}}</h5>
+{% for t in tags %}
+<a href="{{t.get_absolute_url}}">{{t.tag}}</a>
+{% endfor %}
+</body>
+</html>
