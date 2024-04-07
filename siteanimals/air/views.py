@@ -20,7 +20,8 @@ def show_animals(request, animal_slug, class_slug):
     data_an = {'title': an.animal,
                'header': an.animal,
                'content': an.content,
-               'fact': an.unique_fact.content
+               'fact': an.unique_fact.content,
+               'tags': an.tags.all()
                }
     return render(request, 'air/air_animal_view.html', data_an)
 def show_animals_tags(request, animal_slug, air_tag_slug):
