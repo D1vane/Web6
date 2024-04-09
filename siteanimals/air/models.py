@@ -1,32 +1,42 @@
 from django.db import models
 from django.shortcuts import reverse
+
+
 # Create your models here.
 class RedBookAnimal(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_red_book=Air.Status.RARE)
+
+
 class Air(models.Model):
     class Status(models.IntegerChoices):
         USUAL = 0, 'Распространенное'
         RARE = 1, 'Редкое'
+
+    class Meta:
+        verbose_name = 'Воздушные обитатели'
+        verbose_name_plural = 'Воздушные обитатели'
+
     # Название страницы с животным
-    page_name = models.CharField(max_length=255,default='air')
+    page_name = models.CharField(max_length=255, default='air',verbose_name="Слаг")
     # Название животного
-    animal = models.CharField(max_length=255)
+    animal = models.CharField(max_length=255,verbose_name="Имя животного")
     # Информация о животном
-    content = models.TextField(blank=True)
+    content = models.TextField(blank=True,verbose_name="Текст о животном")
     # Время создания страницы о животном
-    time_create = models.DateTimeField(auto_now_add=True)
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
     # Время обновления информации о животном
-    time_update = models.DateTimeField(auto_now=True)
+    time_update = models.DateTimeField(auto_now=True,verbose_name="Время изменения")
     # Занесено ли животное в красную книгу
-    is_red_book = models.BooleanField(choices=Status.choices,default=Status.USUAL)
+    is_red_book = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
+                                      default=Status.USUAL,verbose_name="Красная книга")
     # Класс животного
-    class_of_animal = models.ForeignKey('Air_Kinds', on_delete=models.PROTECT, null=True)
+    class_of_animal = models.ForeignKey('Air_Kinds', on_delete=models.PROTECT, null=True,verbose_name="Класс животного")
     # Особенность животного
     unique_fact = models.OneToOneField('Air_Facts', on_delete=models.SET_NULL, null=True, blank=True,
-                                       related_name='fact')
+                                       related_name='fact',verbose_name="Факт о животном")
     # Теги
-    tags = models.ManyToManyField('AirTags', blank=True, related_name='tags')
+    tags = models.ManyToManyField('AirTags', blank=True, related_name='tags',verbose_name="Теги")
 
 
 class AirTags(models.Model):
@@ -35,11 +45,19 @@ class AirTags(models.Model):
 
     def __str__(self):
         return self.tag
+
     def get_absolute_url(self):
-        return reverse('tag', kwargs={'air_tag_slug':self.slug})
+        return reverse('tag', kwargs={'air_tag_slug': self.slug})
+
 
 class Air_Facts(models.Model):
     content = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = 'Интересный факт'
+        verbose_name_plural = 'Интересный факт'
+
+
 class Air_Kinds(models.Model):
     # Имя класса
     name = models.CharField(max_length=50, db_index=True)
