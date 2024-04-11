@@ -24,20 +24,28 @@ def show_cats(request, cat_slug):
 def show_animals(request, animal_slug, class_slug):
     an = get_object_or_404(Underground, page_name=animal_slug)
     classes = get_object_or_404(Underground_Kinds, slug=class_slug)
+    if an.unique_fact is None:
+        fact = ""
+    else:
+        fact = an.unique_fact.content
     data_an = {'title': an.animal,
                'header': an.animal,
                'content': an.content,
-               'fact': an.unique_fact.content,
+               'fact': fact,
                'tags': an.tags.all()
                }
     return render(request, 'underground/underground_animal_view.html', data_an)
 def show_animals_tags(request, animal_slug, underground_tag_slug):
     an = get_object_or_404(Underground, page_name=animal_slug)
     tags_id = get_object_or_404(UndergroundTags, slug=underground_tag_slug)
+    if an.unique_fact is None:
+        fact = ""
+    else:
+        fact = an.unique_fact.content
     data_an = {'title': an.animal,
                'header': an.animal,
                'content': an.content,
-               'fact': an.unique_fact.content,
+               'fact': fact,
                'tags': an.tags.all()
                }
     return render(request, 'underground/underground_animal_view.html', data_an)

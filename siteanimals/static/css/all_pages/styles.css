@@ -1,0 +1,25 @@
+.header {
+    display: flex;
+    padding-left: 220px;
+    align-items: center;
+    font-style:italic;
+    background: #A66B01;
+    position:absolute;
+    left:0px; top:0px; bottom:0; right:0;
+    height: 100px;
+}
+.content {
+    font-style:oblique;
+    padding-left: 20px;
+    background: #FFBB41;
+    position:absolute;
+    left:200px; top:100px; bottom:0; right:0;
+}
+.sidebar {
+    position:absolute;
+    padding-top: 50px;
+    padding-left: 10px;
+    background: #FFA502;
+    left:0px; top:100px; bottom:0;
+    width: 200px;
+}

@@ -1,0 +1,11 @@
+#header {
+    background: #A66B01;
+    padding-left: 220px;
+}
+#main{
+    background: #FFBB41;
+}
+#content-main{
+    background: #FFA502;
+    font-style:italic;
+}
