@@ -1,5 +1,20 @@
 from django.contrib import admin
 from .models import Underground,Underground_Facts
+class FactFilter(admin.SimpleListFilter):
+    title = 'Наличие факта'
+    parameter_name = 'unique_fact_flag'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('empty', 'Животные без фактов'),
+            ('fact', 'Животные с интересным фактом'),
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == 'empty':
+            return queryset.filter(unique_fact__isnull=True)
+        elif self.value() == 'fact':
+            return queryset.filter(unique_fact__isnull=False)
 @admin.register(Underground)
 class UndergroundAdmin(admin.ModelAdmin):
     list_display = ('id', 'animal', 'time_create','is_red_book','class_of_animal','count_symbols','name_to_slug')
@@ -8,6 +23,16 @@ class UndergroundAdmin(admin.ModelAdmin):
     list_editable = ('is_red_book',)
     list_per_page = 5
     actions = ['set_red_book', 'delete_red_book']
+    # Поле поиска
+    search_fields = ['animal', 'class_of_animal__name']
+    # Фильтры
+    list_filter = [FactFilter, 'class_of_animal__name', 'is_red_book']
+    # Отображаемые поля
+    fields = ['animal', 'is_red_book', 'class_of_animal', 'content', 'unique_fact', 'tags', 'page_name']
+    # Неимзеняемые поля
+    readonly_fields = ['page_name']
+    # Расположение тегов
+    filter_vertical = ['tags']
     @admin.display(description="Количество символов")
     def count_symbols(self, underground: Underground):
         return f"Содержит {len(underground.content) + len(underground.unique_fact.content)} символов."

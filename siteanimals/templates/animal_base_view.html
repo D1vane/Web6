@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
+    <link type="text/css" href="{% static 'css/all_pages/styles.css' %}" rel="stylesheet"/>
 </head>
 <body>
-<h1>{{header}}</h1>
-<p>{{content}}</p>
-<h5>Интересный факт: {{fact}}</h5>
-{% for t in tags %}
-<a href="{{t.get_absolute_url}}">{{t.tag}}</a>
-{% endfor %}
+<div class="header"> <h1>{{header}}</h1>  </div>
+<div class="content">
+    <p>{{content}}</p>
+    <h5>Интересный факт: {{fact}}</h5>
+</div>
+
+<div class="sidebar">
+    {% for t in tags %}
+    <a href="{{t.get_absolute_url}}">{{t.tag}}</a>
+    {% endfor %}
+</div>
 </body>
 </html>

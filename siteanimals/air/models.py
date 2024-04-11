@@ -7,8 +7,16 @@ class RedBookAnimal(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_red_book=Air.Status.RARE)
 
-
+def translit_to_eng(s: str) -> str:
+    d = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
+         'з': 'z', 'и': 'i', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p',
+         'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch',
+         'ш': 'sh', 'щ': 'shch', 'ь': '', 'ы': 'y', 'ъ': '', 'э': 'r', 'ю': 'yu', 'я': 'ya'}
+    return "".join(map(lambda x: d[x] if d.get(x, False) else x, s.lower()))
 class Air(models.Model):
+    def save(self, *args, **kwargs):
+        self.page_name = translit_to_eng(self.animal)
+        super().save(*args, **kwargs)
     class Status(models.IntegerChoices):
         USUAL = 0, 'Распространенное'
         RARE = 1, 'Редкое'
@@ -40,7 +48,7 @@ class Air(models.Model):
 
 
 class AirTags(models.Model):
-    tag = models.CharField(max_length=100, db_index=True)
+    tag = models.CharField(max_length=100, db_index=True, verbose_name="Теги")
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
 
     def __str__(self):
@@ -60,7 +68,7 @@ class Air_Facts(models.Model):
 
 class Air_Kinds(models.Model):
     # Имя класса
-    name = models.CharField(max_length=50, db_index=True)
+    name = models.CharField(max_length=50, db_index=True,verbose_name="Класс")
     # Имя страницы
     slug = models.SlugField(max_length=100, unique=True, db_index=True)
 

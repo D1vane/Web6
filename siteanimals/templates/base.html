@@ -1,23 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
-    <style>
-        .sidebar {
-            position:absolute;
-            left:10px; top:50px; bottom:0;
-            width: 200px;
-        }
-        .main {
-            position:absolute;
-            left:200px; top:0px; bottom:0;
-        }
-    </style>
+    <link type="text/css" href="{% static 'css/all_pages/styles.css' %}" rel="stylesheet"/>
 </head>
 <body>
-<div class = "main">
+<div class ="header">
     <h1>{{header|lower}}</h1>
+</div>
+<div class = "content">
 <ul>
         {% for items in data_inf %}
         <li>

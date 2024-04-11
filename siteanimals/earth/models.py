@@ -1,61 +1,80 @@
 from django.db import models
 from django.shortcuts import reverse
 
+
 # Create your models here.
 class RedBookAnimal(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_red_book=Earth.Status.RARE)
 
 
+def translit_to_eng(s: str) -> str:
+    d = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
+         'з': 'z', 'и': 'i', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p',
+         'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch',
+         'ш': 'sh', 'щ': 'shch', 'ь': '', 'ы': 'y', 'ъ': '', 'э': 'r', 'ю': 'yu', 'я': 'ya'}
+    return "".join(map(lambda x: d[x] if d.get(x, False) else x, s.lower()))
+
+
 class Earth(models.Model):
+    def save(self, *args, **kwargs):
+        self.page_name = translit_to_eng(self.animal)
+        super().save(*args, **kwargs)
     class Status(models.IntegerChoices):
         USUAL = 0, 'Распространенное'
         RARE = 1, 'Редкое'
+
     class Meta:
         verbose_name = 'Наземные обитатели'
         verbose_name_plural = 'Наземные обитатели'
+
     objects = models.Manager()
     redbook = RedBookAnimal()
     # Название страницы с животным
-    page_name = models.CharField(max_length=255, default='earth',verbose_name="Слаг")
+    page_name = models.CharField(max_length=255, default='earth', verbose_name="Слаг")
     # Название животного
-    animal = models.CharField(max_length=255,verbose_name="Имя животного")
+    animal = models.CharField(max_length=255, verbose_name="Имя животного")
     # Информация о животном
-    content = models.TextField(blank=True,verbose_name="Текст о животном")
+    content = models.TextField(blank=True, verbose_name="Текст о животном")
     # Время создания страницы о животном
-    time_create = models.DateTimeField(auto_now_add=True,verbose_name="Время создания")
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
     # Время обновления информации о животном
-    time_update = models.DateTimeField(auto_now=True,verbose_name="Время изменения")
+    time_update = models.DateTimeField(auto_now=True, verbose_name="Время изменения")
     # Занесено ли животное в красную книгу
     is_red_book = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
-                                      default=Status.USUAL,verbose_name="Красная книга")
+                                      default=Status.USUAL, verbose_name="Красная книга")
     # Класс животного
-    class_of_animal = models.ForeignKey('Earth_Kinds', on_delete=models.PROTECT, null=True,verbose_name="Класс животного")
+    class_of_animal = models.ForeignKey('Earth_Kinds', on_delete=models.PROTECT, null=True,
+                                        verbose_name="Класс животного")
     # Особенность животного
     unique_fact = models.OneToOneField('Earth_Facts', on_delete=models.SET_NULL, null=True, blank=True,
                                        related_name='fact', verbose_name="Факт о животном")
     # Теги
-    tags = models.ManyToManyField('EarthTags', blank=True, related_name='tags',verbose_name="Теги")
+    tags = models.ManyToManyField('EarthTags', blank=True, related_name='tags', verbose_name="Теги")
 
 
 class EarthTags(models.Model):
-    tag = models.CharField(max_length=100, db_index=True)
+    tag = models.CharField(max_length=100, db_index=True, verbose_name="Теги")
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
 
     def __str__(self):
         return self.tag
+
     def get_absolute_url(self):
-        return reverse('tag', kwargs={'earth_tag_slug':self.slug})
+        return reverse('tag', kwargs={'earth_tag_slug': self.slug})
+
 
 class Earth_Facts(models.Model):
     content = models.TextField(blank=True)
+
     class Meta:
         verbose_name = 'Интересный факт'
         verbose_name_plural = 'Интересный факт'
 
+
 class Earth_Kinds(models.Model):
     # Имя класса
-    name = models.CharField(max_length=50, db_index=True)
+    name = models.CharField(max_length=50, db_index=True, verbose_name="Класс")
     # Имя страницы
     slug = models.SlugField(max_length=100, unique=True, db_index=True)
 

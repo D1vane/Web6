@@ -4,13 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
-    <link type="text/css" href="{% static 'home/css/styles.css' %}" rel="stylesheet"/>
+    <link type="text/css" href="{% static 'css/all_pages/styles.css' %}" rel="stylesheet"/>
 </head>
 <body>
 {% load home_tags %}
-<h1>{{header}}</h1>
+<div class ="header">
+    <h1>{{header}}</h1>
+</div>
+<div class = "content">
 <ul>
         {% show_classes %}
 </ul>
+</div>
+<div class ="sidebar"></div>
 </body>
 </html>
