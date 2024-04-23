@@ -1,6 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render,get_object_or_404
-from .models import Earth,Earth_Kinds,EarthTags
+from django.shortcuts import render,get_object_or_404, redirect
+from .models import Earth,Earth_Kinds,EarthTags,Earth_Facts
+from .earth_forms import AddAnimalForm
 # Create your views here.
 def index(request):
         data = {'title': 'Наземные обитатели',
@@ -50,3 +51,17 @@ def show_tags(request, earth_tag_slug):
         'content': Earth.objects.filter(tags=tag.id)
         }
     return render(request, 'earth/earth_animals.html', data_tags)
+def add_animal(request):
+    if request.method == 'POST':
+        form = AddAnimalForm(request.POST)
+        if form.is_valid():
+            try:
+                Earth.objects.create(**form.cleaned_data)
+                return redirect('home')
+            except:
+                form.add_error(None,'Ошибка добавления животного')
+    else:
+        form = AddAnimalForm()
+    return render(request, 'earth/earth_addpage.html', {'title': 'Добавление животного',
+                                                        'header': 'Добавление животного',
+                                                        'form': form})

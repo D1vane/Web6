@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound,Http404
 from .models import Underground,Underground_Kinds,UndergroundTags
+from .underground_forms import AddAnimalForm
 # Create your views here.
 def index (request):
     get_data = Underground_Kinds.objects.all()
@@ -57,3 +58,17 @@ def show_tags(request, underground_tag_slug):
         'content': Underground.objects.filter(tags=tag.id)
         }
     return render(request, 'underground/underground_animals.html', data_tags)
+def add_animal(request):
+    if request.method == 'POST':
+        form = AddAnimalForm(request.POST)
+        if form.is_valid():
+            try:
+                Earth.objects.create(**form.cleaned_data)
+                return redirect('home')
+            except:
+                form.add_error(None,'Ошибка добавления животного')
+    else:
+        form = AddAnimalForm()
+    return render(request, 'underground/underground_addpage.html', {'title': 'Добавление животного',
+                                                        'header': 'Добавление животного',
+                                                        'form': form})
