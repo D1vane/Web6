@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .home_forms import UploadFileForm
+from .models import UploadFiles
 import uuid
 # Create your views here.
 data_inf = [{'content':'Наземные животные','kinds':'Виды наземных животных','name': 'earth'},
@@ -12,7 +13,8 @@ def index (request):
     if request.method == "POST":
         form = UploadFileForm(request.POST,request.FILES)
         if form.is_valid():
-            handle_uploaded_files(form.cleaned_data['file'])
+            fp = UploadFiles(file=form.cleaned_data['file'])
+            fp.save()
     else:
         form = UploadFileForm()
     data = {'title': 'Животные мира',

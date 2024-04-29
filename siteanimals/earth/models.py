@@ -51,7 +51,9 @@ class Earth(models.Model):
                                        related_name='fact', verbose_name="Факт о животном")
     # Теги
     tags = models.ManyToManyField('EarthTags', blank=True, related_name='tags', verbose_name="Теги")
-
+    # Фото животного
+    image = models.ImageField(upload_to="images/%Y/%m/%d/",default=None,blank=True,null=True,
+                              verbose_name="Изображение")
 
 class EarthTags(models.Model):
     tag = models.CharField(max_length=100, db_index=True, verbose_name="Теги")

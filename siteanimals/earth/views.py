@@ -26,6 +26,7 @@ def show_animals(request, animal_slug, class_slug):
                'header': an.animal,
                'content': an.content,
                'fact': fact,
+               'image': an.image,
                'tags': an.tags.all()
                }
     return render(request, 'earth/earth_animal_view.html', data_an)
@@ -40,6 +41,7 @@ def show_animals_tags(request, animal_slug, earth_tag_slug):
                'header': an.animal,
                'content': an.content,
                'fact': fact,
+               'image': an.image,
                'tags': an.tags.all()
                }
     return render(request, 'earth/earth_animal_view.html', data_an)
@@ -53,7 +55,7 @@ def show_tags(request, earth_tag_slug):
     return render(request, 'earth/earth_animals.html', data_tags)
 def add_animal(request):
     if request.method == 'POST':
-        form = AddAnimalForm(request.POST)
+        form = AddAnimalForm(request.POST,request.FILES)
         if form.is_valid():
             try:
                 form.save()

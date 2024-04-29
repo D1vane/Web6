@@ -3,6 +3,7 @@ import datetime
 from django.contrib import admin
 from .models import Earth, Earth_Facts
 from django.db import models
+from django.utils.html import mark_safe
 
 
 class FactFilter(admin.SimpleListFilter):
@@ -25,7 +26,8 @@ class FactFilter(admin.SimpleListFilter):
 @admin.register(Earth)
 class EarthAdmin(admin.ModelAdmin):
     # Отображение полей
-    list_display = ('id', 'animal', 'time_create', 'is_red_book', 'class_of_animal', 'count_symbols', 'name_to_slug')
+    list_display = ('id', 'animal', 'time_create', 'is_red_book', 'class_of_animal',
+                    'count_symbols', 'name_to_slug', 'animal_image')
     # Ссылка для перехода к записи
     list_display_links = ('id', 'animal')
     # Сортировка
@@ -41,11 +43,16 @@ class EarthAdmin(admin.ModelAdmin):
     # Фильтры
     list_filter = [FactFilter,'class_of_animal__name', 'is_red_book']
     # Отображаемые поля
-    fields = ['animal','is_red_book','class_of_animal','content','unique_fact','tags','page_name']
+    fields = ['animal','is_red_book','class_of_animal','content','unique_fact','image','animal_image','tags','page_name']
     # Неимзеняемые поля
-    readonly_fields = ['page_name']
+    readonly_fields = ['page_name','animal_image']
     # Расположение тегов
     filter_vertical = ['tags']
+    @admin.display(description="Изображение")
+    def animal_image(self,earth:Earth):
+        if earth.image:
+            return mark_safe(f'<img src={earth.image.url} width="50" height="60">')
+        return "Без изображения"
     @admin.display(description="Количество символов")
     def count_symbols(self, earth: Earth):
         if earth.unique_fact is None:

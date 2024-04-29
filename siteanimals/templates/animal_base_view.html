@@ -7,8 +7,11 @@
     <link type="text/css" href="{% static 'css/all_pages/styles.css' %}" rel="stylesheet"/>
 </head>
 <body>
-<div class="header"> <h1>{{header}}</h1>  </div>
+<div class="header"> <h1>{{header}}</h1></div>
 <div class="content">
+    {% if image %}
+    <img class="img-article-left" src="{{image.url}}" width="400" height="300"></p>
+    {% endif %}
     <p>{{content}}</p>
     <h5>Интересный факт: {{fact}}</h5>
 </div>

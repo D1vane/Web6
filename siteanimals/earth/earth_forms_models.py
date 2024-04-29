@@ -19,7 +19,7 @@ class AddAnimalForm(forms.ModelForm):
         return content
     class Meta:
         model = Earth
-        fields = ['animal','content','is_red_book','class_of_animal','unique_fact','tags']
+        fields = ['animal','content','is_red_book','image','class_of_animal','unique_fact','tags']
     class_of_animal = forms.ModelChoiceField(queryset=Earth_Kinds.objects.all(),empty_label="Выбрать класс",
                                              label="Класс животного")
     unique_fact = forms.ModelChoiceField(queryset=Earth_Facts.objects.all(), empty_label="Выбрать факт",
