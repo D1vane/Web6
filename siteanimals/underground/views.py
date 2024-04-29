@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound,Http404
 from .models import Underground,Underground_Kinds,UndergroundTags
-from .underground_forms import AddAnimalForm
+from .underground_forms_models import AddAnimalForm
 # Create your views here.
 def index (request):
     get_data = Underground_Kinds.objects.all()
@@ -63,7 +63,7 @@ def add_animal(request):
         form = AddAnimalForm(request.POST)
         if form.is_valid():
             try:
-                Earth.objects.create(**form.cleaned_data)
+                form.save()
                 return redirect('home')
             except:
                 form.add_error(None,'Ошибка добавления животного')

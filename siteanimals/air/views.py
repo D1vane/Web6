@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse
 from .models import Air, Air_Kinds,AirTags
-from .air_forms import AddAnimalForm
+from .air_forms_models import AddAnimalForm
 # Create your views here.
 def index(request):
         data = {'title': 'Воздушные обитатели',
@@ -56,7 +56,7 @@ def add_animal(request):
         form = AddAnimalForm(request.POST)
         if form.is_valid():
             try:
-                Earth.objects.create(**form.cleaned_data)
+                form.save()
                 return redirect('home')
             except:
                 form.add_error(None,'Ошибка добавления животного')

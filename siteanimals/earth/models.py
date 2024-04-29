@@ -33,7 +33,7 @@ class Earth(models.Model):
     # Название страницы с животным
     page_name = models.CharField(max_length=255, default='earth', verbose_name="Слаг")
     # Название животного
-    animal = models.CharField(max_length=255, verbose_name="Имя животного")
+    animal = models.CharField(max_length=255, verbose_name="Имя животного",unique=True)
     # Информация о животном
     content = models.TextField(blank=True, verbose_name="Текст о животном")
     # Время создания страницы о животном
