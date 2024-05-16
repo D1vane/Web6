@@ -3,8 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
-    <link type="text/css" href="{% static 'css/all_pages/styles.css' %}" rel="stylesheet"/>
+    <style>
+        .header {
+    display: flex;
+    padding-left: 220px;
+    align-items: center;
+    font-style:italic;
+    background: #A66B01;
+    position:absolute;
+    left:0px; top:0px; bottom:0; right:0;
+    height: 100px;
+}
+.content {
+    font-style:oblique;
+    padding-left: 20px;
+    background: #FFBB41;
+    position:absolute;
+    left:200px; top:100px; bottom:0; right:0;
+}
+.sidebar {
+    position:absolute;
+    padding-top: 50px;
+    padding-left: 10px;
+    background: #FFA502;
+    left:0px; top:100px; bottom:0;
+    width: 200px;
+}
+.content .list-pages {
+	text-align: center;
+	margin: 0 0 20px 0;
+}
+.content .list-pages ul {
+	margin: 20px 0 0 0;
+	padding: 0;
+	list-style: none;
+}
+.content .list-pages ul li {
+	display: inline-block;
+	margin: 0 20px 0 0;
+}
+.content .list-pages a {
+	color: #000;
+	font-size: 24px;
+	text-decoration: none;
+}
+.content .list-pages .page-num, .page-num-selected {
+	display: inline-block;
+	width: 60px;
+	height: 44px;
+	padding: 16px 0 0 0;
+	border: 1px solid #d0d0d0;
+	border-radius: 30px;
+}
+.content .list-pages .page-num:hover {
+	box-shadow: 3px 3px 1px #d0d0d0;
+}
+.content .list-pages .page-num-selected {
+	border: none;
+	color: #000;
+	font-size: 20px;
+}
+.content .list-pages .page-num-selected:hover {
+	box-shadow: none;
+}
+    </style>
+
 </head>
+
 <body>
 <div class="header">
     <h1>{{header}}</h1>
@@ -22,7 +87,36 @@
         </li>
         {% endfor %}
 </ul>
+    {% if page_obj.has_other_pages %}
+    <nav class = "list-pages">
+    <ul>
+        {% if page_obj.has_previous %}
+        <li class="page-num">
+            <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+        </li>
+            {% endif %}
+
+        {% for p in paginator.page_range %}
+            {% if page_obj.number == p %}
+                <li class="page-num page-num-selected">{{ p }}</li>
+            {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+        <li class="page-num">
+            <a href="?page={{ p }}">{{ p }}</a>
+        </li>
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-num">
+            <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+        </li>
+            {% endif %}
+    </ul>
+</nav>
+    {% endif %}
+
     </div>
+
 <div class="sidebar"></div>
+
 </body>
 </html>

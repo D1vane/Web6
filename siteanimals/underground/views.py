@@ -2,6 +2,9 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound,Http404
 from .models import Underground,Underground_Kinds,UndergroundTags
 from .underground_forms_models import AddAnimalForm
+from django.views import View
+from django.views.generic import TemplateView,ListView,DetailView,FormView,CreateView,UpdateView,DeleteView
+from django.urls import reverse_lazy
 # Create your views here.
 def index (request):
     get_data = Underground_Kinds.objects.all()
@@ -9,6 +12,13 @@ def index (request):
             'header': 'Виды подземных животных',
             'data_inf': get_data}
     return render(request, 'underground/underground.html', data)
+class UndergroundHome(TemplateView):
+    template_name = 'underground/underground.html'
+    extra_context = {
+        'title': 'Подземные обитатели',
+        'header': 'Виды подземных животных',
+        'data_inf': Underground_Kinds.objects.all()
+    }
 def mole_population(request,year):
     if (year > 2024 or year < 1900):
         return redirect(index)
@@ -22,6 +32,20 @@ def show_cats(request, cat_slug):
              'content': Underground.objects.filter(class_of_animal=cat.id)
              }
     return render(request, 'underground/underground_animals.html', data_animal)
+class UndergroundCats (ListView):
+    model = Underground
+    template_name = 'underground/underground_animals.html'
+    context_object_name = 'content'
+    paginate_by = 5
+    allow_empty = False
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cat = context['content'][0].class_of_animal
+        context['title'] = f'Класс: {cat.name}'
+        context['header'] = cat.name
+        return context
+    def get_queryset(self):
+        return Underground.objects.filter(class_of_animal__slug=self.kwargs['cat_slug']).select_related('class_of_animal')
 def show_animals(request, animal_slug, class_slug):
     an = get_object_or_404(Underground, page_name=animal_slug)
     classes = get_object_or_404(Underground_Kinds, slug=class_slug)
@@ -37,6 +61,22 @@ def show_animals(request, animal_slug, class_slug):
                'tags': an.tags.all()
                }
     return render(request, 'underground/underground_animal_view.html', data_an)
+class Show_Tags(DetailView):
+    model = Underground
+    template_name = 'underground/underground_animal_view.html'
+    slug_url_kwarg = 'animal_slug'
+    context_object_name = 'animal'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = context['animal'].animal
+        context['header'] = context['animal'].animal
+        context['content'] = context['animal'].content
+        context['fact'] = context['animal'].unique_fact.content
+        context['image'] = context['animal'].image
+        context['tags'] = context['animal'].tags.all()
+        return context
+    def get_object(self, queryset=None):
+        return get_object_or_404(Underground,page_name=self.kwargs[self.slug_url_kwarg])
 def show_animals_tags(request, animal_slug, underground_tag_slug):
     an = get_object_or_404(Underground, page_name=animal_slug)
     tags_id = get_object_or_404(UndergroundTags, slug=underground_tag_slug)
@@ -66,7 +106,7 @@ def add_animal(request):
         if form.is_valid():
             try:
                 form.save()
-                return redirect('home')
+                return redirect('home_underground')
             except:
                 form.add_error(None,'Ошибка добавления животного')
     else:
@@ -74,3 +114,43 @@ def add_animal(request):
     return render(request, 'underground/underground_addpage.html', {'title': 'Добавление животного',
                                                         'header': 'Добавление животного',
                                                         'form': form})
+class Add_Animal(View):
+    def get (self,request):
+        form = AddAnimalForm()
+        return render(request, 'underground/underground_addpage.html', {'title': 'Добавление животного',
+                                                            'header': 'Добавление животного',
+                                                            'form': form})
+    def post (self,request):
+        form = AddAnimalForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home_underground')
+        return render(request, 'underground/underground_addpage.html', {'title': 'Добавление животного',
+                                                            'header': 'Добавление животного',
+                                                            'form': form})
+class FormAdd_Animal(CreateView):
+    model = Underground
+    template_name = 'underground/underground_addpage.html'
+    success_url = reverse_lazy('home_underground')
+    extra_context = {
+        'title': 'Добавление животного',
+        'header': 'Добавление животного'
+    }
+    fields = '__all__'
+class FormUpdate_Animal(UpdateView):
+    model = Underground
+    fields = ['animal','content','is_red_book','class_of_animal','unique_fact','tags','image']
+    template_name = 'underground/underground_addpage.html'
+    success_url = reverse_lazy('home_underground')
+    extra_context = {
+        'title': 'Редактирование животного',
+        'header': 'Редактирование животного'
+    }
+class FormDelete_Animal(DeleteView):
+    model = Underground
+    template_name = 'underground/underground_addpage.html'
+    success_url = reverse_lazy('home_underground')
+    extra_context = {
+        'title': 'Удаление животного',
+        'header': 'Удаление животного'
+    }
