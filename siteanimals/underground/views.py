@@ -5,6 +5,7 @@ from .underground_forms_models import AddAnimalForm
 from django.views import View
 from django.views.generic import TemplateView,ListView,DetailView,FormView,CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 def index (request):
     get_data = Underground_Kinds.objects.all()
@@ -128,7 +129,7 @@ class Add_Animal(View):
         return render(request, 'underground/underground_addpage.html', {'title': 'Добавление животного',
                                                             'header': 'Добавление животного',
                                                             'form': form})
-class FormAdd_Animal(CreateView):
+class FormAdd_Animal(LoginRequiredMixin,CreateView):
     model = Underground
     template_name = 'underground/underground_addpage.html'
     success_url = reverse_lazy('home_underground')
@@ -137,7 +138,11 @@ class FormAdd_Animal(CreateView):
         'header': 'Добавление животного'
     }
     fields = '__all__'
-class FormUpdate_Animal(UpdateView):
+    def form_valid(self, form):
+        u = form.save(commit=False)
+        u.author = self.request.user
+        return super().form_valid(form)
+class FormUpdate_Animal(LoginRequiredMixin,UpdateView):
     model = Underground
     fields = ['animal','content','is_red_book','class_of_animal','unique_fact','tags','image']
     template_name = 'underground/underground_addpage.html'
@@ -146,7 +151,7 @@ class FormUpdate_Animal(UpdateView):
         'title': 'Редактирование животного',
         'header': 'Редактирование животного'
     }
-class FormDelete_Animal(DeleteView):
+class FormDelete_Animal(LoginRequiredMixin,DeleteView):
     model = Underground
     template_name = 'underground/underground_addpage.html'
     success_url = reverse_lazy('home_underground')

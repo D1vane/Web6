@@ -8,8 +8,12 @@
 </head>
 <body>
 <div class ="header">
-    <h1>{{header|lower}}</h1>
+    <nav class ="login">
+    <a href="{% url 'users:login' %}">Войти</a> | <a href="{% url 'users:register' %}">Регистрация</a></p>
+    </nav>
+    <h1>{{header}}</h1>
 </div>
+
 <div class = "content">
 <a href="addpage/" class="button">Добавить животного</a></p>
     <a href="editpage/" class="button">Редактировать животного</a></p>

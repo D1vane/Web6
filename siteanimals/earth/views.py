@@ -6,6 +6,7 @@ from django.views import View
 from django.views.generic import TemplateView,DetailView,ListView,FormView,CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
 from .utils import DataMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 def index(request):
         data = {'title': 'Наземные обитатели',
@@ -124,19 +125,23 @@ class Add_Animal(View):
         return render(request, 'earth/earth_addpage.html', {'title': 'Добавление животного',
                                                             'header': 'Добавление животного',
                                                             'form': form})
-class FormAdd_Animal(DataMixin,CreateView):
+class FormAdd_Animal(LoginRequiredMixin,DataMixin,CreateView):
     template_name = 'earth/earth_addpage.html'
     success_url = reverse_lazy('home_earth')
     fields = '__all__'
     title_page = 'Добавление животного'
+    def form_valid(self, form):
+        e = form.save(commit=False)
+        e.author = self.request.user
+        return super().form_valid(form)
 
-class FormUpdate_Animal(DataMixin,UpdateView):
+class FormUpdate_Animal(LoginRequiredMixin,DataMixin,UpdateView):
     fields = ['animal','content','is_red_book','class_of_animal','unique_fact','tags','image']
     template_name = 'earth/earth_addpage.html'
     success_url = reverse_lazy('home_earth')
     title_page = 'Редактирование животного'
 
-class FormDelete_Animal(DataMixin,DeleteView):
+class FormDelete_Animal(LoginRequiredMixin,DataMixin,DeleteView):
     template_name = 'earth/earth_addpage.html'
     success_url = reverse_lazy('home_earth')
     title_page = 'Удаление животного'

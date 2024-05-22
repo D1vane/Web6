@@ -81,6 +81,7 @@
         <li>
                <p><a href="{{items.page_name}}/">{{items.animal}}</a></p>
                <p>{{items.content|truncatewords:50}}</p>
+                <p>Автор: {{items.author.username|default:"неизвестен"}}</p>
                 {% if items.image %}
                     <p><img class="img-article-left thumb" src="{{items.image.url}}" width="50" height="60"></p>
                 {% endif %}

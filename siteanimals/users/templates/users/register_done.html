@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация успешна</title>
+    <link type="text/css" href="{% static 'css/all_pages/styles.css' %}" rel="stylesheet"/>
+</head>
+<body>
+<div class = "header">
+    <h1>Добро пожаловать!</h1>
+</div>
+
+<div class = "content">
+        <p >Вы успешно зарегистрировались на сайте! Для входа в систему необходимо авторизоваться по этой
+            <a href="{% url 'users:login' %}">ссылке</a> </p>
+    </div>
+
+    {% endfor %}
+<div class ="sidebar"></div>
+</body>
+</html>

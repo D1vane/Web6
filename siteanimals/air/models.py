@@ -1,6 +1,6 @@
 from django.db import models
 from django.shortcuts import reverse
-
+from django.contrib.auth import get_user_model
 
 # Create your models here.
 class RedBookAnimal(models.Manager):
@@ -48,6 +48,8 @@ class Air(models.Model):
     # Фото животного
     image = models.ImageField(upload_to="images/%Y/%m/%d/", default=None, blank=True, null=True,
                               verbose_name="Изображение")
+    # Автор статьи
+    author = models.ForeignKey(get_user_model(),on_delete=models.SET_NULL,null=True,default=None)
 
 class AirTags(models.Model):
     tag = models.CharField(max_length=100, db_index=True, verbose_name="Теги")

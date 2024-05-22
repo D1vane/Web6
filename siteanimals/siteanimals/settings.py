@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-f+d(k1_ep%gr($($gy796ckkd79sifx*8fz3$mlmik02k3xn#a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'water.apps.WaterConfig',
     'underground.apps.UndergroundConfig',
     'air.apps.AirConfig',
+    'users.apps.UsersConfig'
 ]
 
 
@@ -137,3 +138,12 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_REDIRECT_URL = 'home'
+
+LOGOUT_REDIRECT_URL = 'home'
+
+LOGIN_URL = 'users:login'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'users.authentication.EmailAuthBackend'
+]

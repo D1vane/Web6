@@ -23,6 +23,7 @@ handler404 = views.page_not_found
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('home.urls'),name='home'),
+    path('users/',include('users.urls',namespace='users'))
 ]
 if settings.DEBUG:
     urlpatterns += static(
