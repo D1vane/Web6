@@ -6,7 +6,7 @@ from django.views import View
 from django.views.generic import TemplateView,DetailView,ListView,FormView,CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
 from .utils import DataMixin
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 # Create your views here.
 def index(request):
         data = {'title': 'Наземные обитатели',
@@ -125,7 +125,8 @@ class Add_Animal(View):
         return render(request, 'earth/earth_addpage.html', {'title': 'Добавление животного',
                                                             'header': 'Добавление животного',
                                                             'form': form})
-class FormAdd_Animal(LoginRequiredMixin,DataMixin,CreateView):
+class FormAdd_Animal(PermissionRequiredMixin,LoginRequiredMixin,DataMixin,CreateView):
+    permission_required = 'earth.add_earth'
     template_name = 'earth/earth_addpage.html'
     success_url = reverse_lazy('home_earth')
     fields = '__all__'

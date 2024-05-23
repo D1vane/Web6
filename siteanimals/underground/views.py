@@ -5,7 +5,7 @@ from .underground_forms_models import AddAnimalForm
 from django.views import View
 from django.views.generic import TemplateView,ListView,DetailView,FormView,CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 # Create your views here.
 def index (request):
     get_data = Underground_Kinds.objects.all()
@@ -129,7 +129,8 @@ class Add_Animal(View):
         return render(request, 'underground/underground_addpage.html', {'title': 'Добавление животного',
                                                             'header': 'Добавление животного',
                                                             'form': form})
-class FormAdd_Animal(LoginRequiredMixin,CreateView):
+class FormAdd_Animal(PermissionRequiredMixin,LoginRequiredMixin,CreateView):
+    permission_required = 'underground.add_underground'
     model = Underground
     template_name = 'underground/underground_addpage.html'
     success_url = reverse_lazy('home_underground')

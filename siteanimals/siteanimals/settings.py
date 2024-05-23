@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-f+d(k1_ep%gr($($gy796ckkd79sifx*8fz3$mlmik02k3xn#a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = ['127.0.0.1']
 
 
@@ -147,6 +148,16 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'users.authentication.EmailAuthBackend'
 ]
-EMAIL_BACKEND = [
-    "django.core.mail.backends.console.EmailBackend"
-]
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+
+
+EMAIL_HOST = "smtp.yandex.ru"
+EMAIL_PORT = 465
+EMAIL_HOST_USER = "kottemix@yandex.ru"
+EMAIL_HOST_PASSWORD = "agrsahvughvbggcp"
+EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL= EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER
