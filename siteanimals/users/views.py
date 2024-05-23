@@ -1,10 +1,11 @@
 from django.shortcuts import render, reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import LoginUserForm,RegisterUserForm
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import LoginView, LogoutView, AuthenticationForm
-from django.views.generic import CreateView
+from .forms import LoginUserForm,RegisterUserForm, ProfileUserForm,UserPasswordChangeForm
+from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth.views import LoginView, LogoutView, AuthenticationForm,PasswordChangeView
+from django.views.generic import CreateView,UpdateView
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 class LoginUser(LoginView):
@@ -21,6 +22,28 @@ class RegisterUser(CreateView):
         'header' : "Регистрация"
     }
     success_url = reverse_lazy('users:login')
+
+class ProfileUser(LoginRequiredMixin,UpdateView):
+    model = get_user_model()
+    form_class = ProfileUserForm
+    template_name = 'users/profile.html'
+    extra_context = {
+        'title': "Профиль пользователя",
+        'header': "Профиль пользователя"
+    }
+    def get_success_url(self):
+        return reverse_lazy('users:profile',args=[self.request.user.pk])
+    def get_object(self, queryset=None):
+        return self.request.user
+
+class UserPasswordChange(PasswordChangeView):
+    form_class = UserPasswordChangeForm
+    success_url = reverse_lazy("users:password_change_done")
+    template_name = "users/password_change_form.html"
+    extra_context = {
+        'title' : "Изменение пароля",
+        'header': "Изменение пароля"
+    }
 def login_user(request):
     if request.method == 'POST':
         form = LoginUserForm(request.POST)
