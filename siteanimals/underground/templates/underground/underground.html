@@ -3,3 +3,8 @@
 {% load underground_tags %}
 {% show_underground_tags %}
 {% endblock %}
+{% block addAnimal %}
+    {% if perms.underground.add_underground %}
+       | <a href="addpage/" class="button">Добавить животное</a>
+    {% endif %}
+{% endblock %}

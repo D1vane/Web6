@@ -3,3 +3,8 @@
 {% load earth_tags %}
 {% show_earth_tags %}
 {% endblock %}
+{% block addAnimal %}
+    {% if perms.earth.add_earth %}
+        | <a href="addpage/" class="button">Добавить животное</a>
+    {% endif %}
+{% endblock %}

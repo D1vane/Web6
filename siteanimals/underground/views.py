@@ -37,7 +37,7 @@ class UndergroundCats (ListView):
     model = Underground
     template_name = 'underground/underground_animals.html'
     context_object_name = 'content'
-    paginate_by = 5
+    paginate_by = 3
     allow_empty = False
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -152,6 +152,12 @@ class FormUpdate_Animal(LoginRequiredMixin,UpdateView):
         'title': 'Редактирование животного',
         'header': 'Редактирование животного'
     }
+    context_object_name = 'content'
+    slug_url_kwarg = 'animal_slug'
+    def get_queryset(self):
+        return Underground.objects.filter(class_of_animal__slug=self.kwargs['cat_slug']).select_related('class_of_animal')
+    def get_object(self, queryset=None):
+        return get_object_or_404(Underground,page_name=self.kwargs[self.slug_url_kwarg])
 class FormDelete_Animal(LoginRequiredMixin,DeleteView):
     model = Underground
     template_name = 'underground/underground_addpage.html'
@@ -160,3 +166,9 @@ class FormDelete_Animal(LoginRequiredMixin,DeleteView):
         'title': 'Удаление животного',
         'header': 'Удаление животного'
     }
+    context_object_name = 'content'
+    slug_url_kwarg = 'animal_slug'
+    def get_queryset(self):
+        return Underground.objects.filter(class_of_animal__slug=self.kwargs['cat_slug']).select_related('class_of_animal')
+    def get_object(self, queryset=None):
+        return get_object_or_404(Underground,page_name=self.kwargs[self.slug_url_kwarg])

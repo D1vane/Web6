@@ -3,3 +3,8 @@
 {% load air_tags %}
 {% show_air_tags %}
 {% endblock %}
+{% block addAnimal %}
+    {% if perms.air.add_air %}
+       | <a href="addpage/" class="button">Добавить животное</a>
+    {% endif %}
+{% endblock %}

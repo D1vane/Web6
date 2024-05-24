@@ -57,11 +57,6 @@ def login_user(request):
         form = LoginUserForm()
         return render(request, 'users/login.html', {'form': form})
 
-
-def logout_user(request):
-    logout(request)
-    return HttpResponse(reverse('users:login'))
-
 def register(request):
     if request.method == "POST":
         form = RegisterUserForm(request.POST)

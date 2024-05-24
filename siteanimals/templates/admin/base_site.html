@@ -10,4 +10,18 @@
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
-{% block extrastyle %} <link rel="stylesheet" href="{% static 'css/admin/admin.css' %}"> {% endblock %}
+{% block extrastyle %}
+<style>
+.header {
+    background: #a4a4fe;
+    padding-left: 220px;
+}
+.main{
+    background: #d3d3ff;
+}
+.content-main{
+    background: #778fff;
+    font-style:italic;
+}
+</style>
+{% endblock %}

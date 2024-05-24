@@ -1,1 +1,9 @@
 {% extends 'animal_base_view.html' %}
+{% block head %}
+    {% if perms.water.change_water %}
+       | <a href="editpage/" class="button">Редактировать животное</a>
+    {% endif %}
+    {% if perms.water.delete_water %}
+       | <a href="deletepage/" class="button">Удалить животное</a>
+    {% endif %}
+{% endblock %}

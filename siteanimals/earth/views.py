@@ -32,7 +32,7 @@ class EarthCats (ListView):
     template_name = 'earth/earth_animals.html'
     context_object_name = 'content'
     allow_empty = False
-    paginate_by = 5
+    paginate_by = 3
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         cat = context['content'][0].class_of_animal
@@ -136,14 +136,31 @@ class FormAdd_Animal(PermissionRequiredMixin,LoginRequiredMixin,DataMixin,Create
         e.author = self.request.user
         return super().form_valid(form)
 
-class FormUpdate_Animal(LoginRequiredMixin,DataMixin,UpdateView):
+class FormUpdate_Animal(PermissionRequiredMixin,LoginRequiredMixin,DataMixin,UpdateView):
+    model = Earth
+    permission_required = 'earth.change_earth'
     fields = ['animal','content','is_red_book','class_of_animal','unique_fact','tags','image']
     template_name = 'earth/earth_addpage.html'
     success_url = reverse_lazy('home_earth')
     title_page = 'Редактирование животного'
+    context_object_name = 'content'
+    slug_url_kwarg = 'animal_slug'
+    def get_queryset(self):
+        return Earth.objects.filter(class_of_animal__slug=self.kwargs['cat_slug']).select_related('class_of_animal')
+    def get_object(self, queryset=None):
+        return get_object_or_404(Earth,page_name=self.kwargs[self.slug_url_kwarg])
 
-class FormDelete_Animal(LoginRequiredMixin,DataMixin,DeleteView):
+class FormDelete_Animal(PermissionRequiredMixin,LoginRequiredMixin,DataMixin,DeleteView):
+    permission_required = 'earth.delete_earth'
     template_name = 'earth/earth_addpage.html'
     success_url = reverse_lazy('home_earth')
     title_page = 'Удаление животного'
+    context_object_name = 'content'
+    slug_url_kwarg = 'animal_slug'
+
+    def get_queryset(self):
+        return Earth.objects.filter(class_of_animal__slug=self.kwargs['cat_slug']).select_related('class_of_animal')
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Earth, page_name=self.kwargs[self.slug_url_kwarg])
 

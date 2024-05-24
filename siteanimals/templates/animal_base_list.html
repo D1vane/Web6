@@ -3,31 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
+    <link rel="icon" href="media/favicon.png" type="image/png">
     <style>
-        .header {
-    display: flex;
+.header {
     padding-left: 220px;
     align-items: center;
     font-style:italic;
-    background: #A66B01;
+    background: #a4a4fe;
     position:absolute;
     left:0px; top:0px; bottom:0; right:0;
     height: 100px;
 }
-.content {
-    font-style:oblique;
-    padding-left: 20px;
-    background: #FFBB41;
-    position:absolute;
-    left:200px; top:100px; bottom:0; right:0;
+ul.list-articles {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+ul li {
+	border-bottom: 1px solid #000;
+	list-style-type: none;
+}
+img {max-width: 600px; height: auto;}
+
+img.img-article-left {
+	max-width: 300px;
+	height: auto;
+	float: left;
+	padding: 0 10px 10px 0;
+}
+
+img.img-article-left.thumb {
+	max-width: 150px;
+	height: auto;
 }
 .sidebar {
     position:absolute;
     padding-top: 50px;
     padding-left: 10px;
-    background: #FFA502;
-    left:0px; top:100px; bottom:0;
+    background: #778fff;
+    left:0px; top:100px; bottom:0px;
     width: 200px;
+}
+.content {
+    font-style:oblique;
+    padding-left: 20px;
+    background: #d3d3ff;
+    position:absolute;
+    left:200px; top:100px; bottom:0; right:0;
 }
 .content .list-pages {
 	text-align: center;
@@ -66,12 +88,42 @@
 .content .list-pages .page-num-selected:hover {
 	box-shadow: none;
 }
+a:link {
+  color: #1a01fe;
+}
+
+a:visited {
+  color: #6200c0;
+}
+
+a:focus {
+  border-bottom: 1px solid;
+  background: #8a7dfe;
+}
+
+a:hover {
+  border-bottom: 1px solid;
+  background: #8a7dfe;
+}
+
+a:active {
+  background: #a69cff;
+  color: #cdfeaa;
+}
     </style>
 
 </head>
 
 <body>
 <div class="header">
+    <nav class ="login">
+    {% if request.user.is_authenticated %}
+      {{user.username}} | <a href="{% url 'users:profile' %}">Личный кабинет</a> | <a href="{% url 'users:logout' %}">Выйти</a>
+    {% else %}
+        <a href="{% url 'users:login' %}">Войти</a> | <a href="{% url 'users:register' %}">Регистрация</a>
+    {% endif %}
+    | <a href="{% url 'home' %}">Главная страница</a>
+    </nav>
     <h1>{{header}}</h1>
 </div>
 <div class="content">
@@ -79,12 +131,13 @@
 <ul>
         {% for items in content %}
         <li>
+                {% if items.image %}
+                <p><img class="img-article-left" src="{{items.image.url}}" width="175" height="175"></p>
+                {% endif %}
                <p><a href="{{items.page_name}}/">{{items.animal}}</a></p>
                <p>{{items.content|truncatewords:50}}</p>
-                <p>Автор: {{items.author.username|default:"неизвестен"}}</p>
-                {% if items.image %}
-                    <p><img class="img-article-left thumb" src="{{items.image.url}}" width="50" height="60"></p>
-                {% endif %}
+                <p>Автор: {{items.author.username|default:"Администратор"}}</p>
+
         </li>
         {% endfor %}
 </ul>

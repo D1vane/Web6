@@ -4,10 +4,44 @@
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
-    <link type="text/css" href="{% static 'css/all_pages/styles.css' %}" rel="stylesheet"/>
+    <link rel="icon" href="media/favicon.png" type="image/png">
+        <style>
+        .header {
+    padding-left: 220px;
+    align-items: center;
+    font-style:italic;
+    background: #a4a4fe;
+    position:absolute;
+    left:0px; top:0px; bottom:0; right:0;
+    height: 100px;
+}
+.sidebar {
+    position:absolute;
+    padding-top: 50px;
+    padding-left: 10px;
+    background: #778fff;
+    left:0px; top:100px; bottom:0px;
+    width: 200px;
+}
+.content {
+    font-style:oblique;
+    padding-left: 20px;
+    background: #d3d3ff;
+    position:absolute;
+    left:200px; top:100px; bottom:0; right:0;
+
+        </style>
 </head>
 <body>
 <div class = "header">
+    <nav class ="login">
+    {% if request.user.is_authenticated %}
+      {{user.username}} | <a href="{% url 'users:profile' %}">Личный кабинет</a> | <a href="{% url 'users:logout' %}">Выйти</a>
+    {% else %}
+        <a href="{% url 'users:login' %}">Войти</a> | <a href="{% url 'users:register' %}">Регистрация</a>
+    {% endif %}
+    | <a href="{% url 'home' %}">Главная страница</a>
+    </nav>
     <h1>{{header}}</h1>
 </div>
 

@@ -1,1 +1,9 @@
 {% extends 'animal_base_view.html' %}
+{% block head %}
+    {% if perms.underground.change_underground %}
+       | <a href="editpage/" class="button">Редактировать животное</a>
+    {% endif %}
+    {% if perms.underground.delete_underground %}
+       | <a href="deletepage/" class="button">Удалить животное</a>
+    {% endif %}
+{% endblock %}

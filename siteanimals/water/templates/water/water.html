@@ -3,3 +3,8 @@
 {% load water_tags %}
 {% show_water_tags %}
 {% endblock %}
+{% block addAnimal %}
+    {% if perms.water.add_water %}
+       | <a href="addpage/" class="button">Добавить животное</a>
+    {% endif %}
+{% endblock %}
