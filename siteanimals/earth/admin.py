@@ -1,5 +1,4 @@
 import datetime
-
 from django.contrib import admin
 from .models import Earth, Earth_Facts
 from django.db import models

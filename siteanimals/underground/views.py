@@ -7,12 +7,6 @@ from django.views.generic import TemplateView,ListView,DetailView,FormView,Creat
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 # Create your views here.
-def index (request):
-    get_data = Underground_Kinds.objects.all()
-    data = {'title': 'Подземные обитатели',
-            'header': 'Виды подземных животных',
-            'data_inf': get_data}
-    return render(request, 'underground/underground.html', data)
 class UndergroundHome(TemplateView):
     template_name = 'underground/underground.html'
     extra_context = {
@@ -20,19 +14,6 @@ class UndergroundHome(TemplateView):
         'header': 'Виды подземных животных',
         'data_inf': Underground_Kinds.objects.all()
     }
-def mole_population(request,year):
-    if (year > 2024 or year < 1900):
-        return redirect(index)
-    if year == 2000:
-        raise Http404()
-    return HttpResponse(f"<h1>Численность кротов: </h1><h3>{year}</h3>")
-def show_cats(request, cat_slug):
-    cat = get_object_or_404(Underground_Kinds, slug=cat_slug)
-    data_animal = {'title': f'Класс: {cat.name}',
-             'header': cat.name,
-             'content': Underground.objects.filter(class_of_animal=cat.id)
-             }
-    return render(request, 'underground/underground_animals.html', data_animal)
 class UndergroundCats (ListView):
     model = Underground
     template_name = 'underground/underground_animals.html'
@@ -78,21 +59,7 @@ class Show_Tags(DetailView):
         return context
     def get_object(self, queryset=None):
         return get_object_or_404(Underground,page_name=self.kwargs[self.slug_url_kwarg])
-def show_animals_tags(request, animal_slug, underground_tag_slug):
-    an = get_object_or_404(Underground, page_name=animal_slug)
-    tags_id = get_object_or_404(UndergroundTags, slug=underground_tag_slug)
-    if an.unique_fact is None:
-        fact = ""
-    else:
-        fact = an.unique_fact.content
-    data_an = {'title': an.animal,
-               'header': an.animal,
-               'content': an.content,
-               'fact': fact,
-               'image': an.image,
-               'tags': an.tags.all()
-               }
-    return render(request, 'underground/underground_animal_view.html', data_an)
+
 def show_tags(request, underground_tag_slug):
     tag = get_object_or_404(UndergroundTags, slug=underground_tag_slug)
     data_tags = {
@@ -101,34 +68,8 @@ def show_tags(request, underground_tag_slug):
         'content': Underground.objects.filter(tags=tag.id)
         }
     return render(request, 'underground/underground_animals.html', data_tags)
-def add_animal(request):
-    if request.method == 'POST':
-        form = AddAnimalForm(request.POST,request.FILES)
-        if form.is_valid():
-            try:
-                form.save()
-                return redirect('home_underground')
-            except:
-                form.add_error(None,'Ошибка добавления животного')
-    else:
-        form = AddAnimalForm()
-    return render(request, 'underground/underground_addpage.html', {'title': 'Добавление животного',
-                                                        'header': 'Добавление животного',
-                                                        'form': form})
-class Add_Animal(View):
-    def get (self,request):
-        form = AddAnimalForm()
-        return render(request, 'underground/underground_addpage.html', {'title': 'Добавление животного',
-                                                            'header': 'Добавление животного',
-                                                            'form': form})
-    def post (self,request):
-        form = AddAnimalForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('home_underground')
-        return render(request, 'underground/underground_addpage.html', {'title': 'Добавление животного',
-                                                            'header': 'Добавление животного',
-                                                            'form': form})
+
+
 class FormAdd_Animal(PermissionRequiredMixin,LoginRequiredMixin,CreateView):
     permission_required = 'underground.add_underground'
     model = Underground

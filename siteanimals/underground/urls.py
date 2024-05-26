@@ -1,7 +1,6 @@
 from django.urls import path,register_converter
-from underground import views,converters
+from underground import views
 
-register_converter(converters.FourDigitYearConverter, "year4")
 urlpatterns = [
     path ('',views.UndergroundHome.as_view(),name='home_underground'),
     path ('addpage/',views.FormAdd_Animal.as_view(),name='add_page'),
