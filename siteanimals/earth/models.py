@@ -4,10 +4,6 @@ from django.contrib.auth import get_user_model
 
 
 # Create your models here.
-class RedBookAnimal(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(is_red_book=Earth.Status.RARE)
-
 
 def translit_to_eng(s: str) -> str:
     d = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
@@ -30,7 +26,6 @@ class Earth(models.Model):
         verbose_name_plural = 'Наземные обитатели'
 
     objects = models.Manager()
-    redbook = RedBookAnimal()
     # Название страницы с животным
     page_name = models.CharField(max_length=255, default='earth', verbose_name="Слаг")
     # Название животного
@@ -85,9 +80,3 @@ class Earth_Kinds(models.Model):
     def __str__(self):
         return self.name
 
-
-class UploadImage(models.Model):
-    # Заголовок изображения
-    caption = models.CharField(max_length=255)
-    # Изображение
-    photo = models.ImageField(upload_to='earth/static/images')

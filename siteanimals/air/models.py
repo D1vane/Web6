@@ -3,9 +3,6 @@ from django.shortcuts import reverse
 from django.contrib.auth import get_user_model
 
 # Create your models here.
-class RedBookAnimal(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(is_red_book=Air.Status.RARE)
 
 def translit_to_eng(s: str) -> str:
     d = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
@@ -79,9 +76,3 @@ class Air_Kinds(models.Model):
     def __str__(self):
         return self.name
 
-
-class UploadImage(models.Model):
-    # Заголовок изображения
-    caption = models.CharField(max_length=255)
-    # Изображение
-    photo = models.ImageField(upload_to='air/static/images')
